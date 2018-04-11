@@ -1,0 +1,38 @@
+{
+    "name": "rx-fsa",
+    "version": "0.3.0",
+    "description": "Fluent syntax for defining typesafe Redux reducers on top of typescript-fsa.",
+    "main": "dist/index.js",
+    "types": "dist/index",
+    "files": [
+        "dist/"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/patrimart/rx-fsa.git"
+    },
+    "keywords": [
+        "redux",
+        "typescript",
+        "action",
+        "reducer",
+        "builder"
+    ],
+    "author": "Patrick Martin",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/patrimart/rx-fsa/issues"
+    },
+    "homepage": "https://github.com/patrimart",
+    "scripts": {},
+    "devDependencies": {
+        "@types/jest": "^20.0.2",
+        "jest": "^20.0.4",
+        "prettier": "^1.5.3",
+        "rxjs": "^5.5.9",
+        "ts-jest": "^20.0.6",
+        "tslint": "^5.9.1",
+        "typescript": "^2.8.1"
+    },
+    "dependencies": {}
+}
