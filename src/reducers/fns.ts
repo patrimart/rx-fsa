@@ -1,5 +1,5 @@
 import { ActionCreator, Action, isType } from "../actions";
-import { Handler, Reducer, ReducerDefaultFn, ReducerFn, CasesFn } from "./interfaces";
+import { Handler, Reducer, ReducerFn, CasesFn } from "./interfaces";
 
 /**
  * Case function matches ACtionCreator to handler.
@@ -21,8 +21,8 @@ export const casesFn: CasesFn = <S>(
 /**
  * Compose caseFn and casesFn with initial state.
  */
-export const reducerDefaultFn: ReducerDefaultFn = <S>(...cases: Array<Reducer<S, any>>) => (
-  initialState: S,
+export const reducerDefaultFn = <S>(initialState: S): ReducerFn => (
+  ...cases: Array<Reducer<S, any>>
 ): Reducer<S, any> => (s = initialState, a: any) => (reducerFn as any)(...cases)(s, a);
 
 /**
