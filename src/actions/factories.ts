@@ -1,53 +1,32 @@
-export function actionCreatorFactory(
-  prefix?: string | null,
-  defaultIsError: (payload: any) => boolean = p => p instanceof Error,
-): ActionCreatorFactory {
-  const actionTypes: { [type: string]: boolean } = {};
+import { Action, ActionCreator, ActionCreatorFactory, AsyncActionCreators, Done, Fail } from "./interfaces";
 
-  const base = prefix ? `${prefix}/` : "";
+export function actionCreatorFactory(prefix: string): ActionCreatorFactory {
+  const base = prefix + "/";
 
-  function actionCreator<P>(
-    type: string,
-    commonMeta?: Meta,
-    isError: ((payload: P) => boolean) | boolean = defaultIsError,
-  ): ActionCreator<P> {
-    const fullType = base + type;
-
+  function actionCreator<P, M>(activity: string, commonMeta?: M, error?: true): ActionCreator<P, M> {
+    const type = base + activity;
     return Object.assign(
-      (payload: P, meta?: Meta) => {
-        const action: Action<P> = {
-          type: fullType,
-          payload,
-        };
-
-        if (commonMeta || meta) {
-          action.meta = Object.assign({}, commonMeta, meta);
-        }
-
-        if (isError && (typeof isError === "boolean" || isError(payload))) {
-          action.error = true;
-        }
-
-        return action;
-      },
+      <M2>(payload: P, meta?: M2): Action<P, M & M2> => ({
+        type,
+        payload,
+        meta: Object.assign(commonMeta, meta),
+        error,
+      }),
       {
-        type: fullType,
-        toString: () => fullType,
-        match: (action: Action): action is Action<P> => action.type === fullType,
+        type,
+        match: (action: Action): action is Action<P> => action.type === type,
       },
     );
   }
 
-  function asyncActionCreators<P, S, E>(type: string, commonMeta?: Meta): AsyncActionCreators<P, S, E> {
+  function asyncActionCreators<P, S, E, M>(type: string, commonMeta?: M): AsyncActionCreators<P, S, E, M> {
     return {
       type: base + type,
-      started: actionCreator<P>(`${type}_STARTED`, commonMeta, false),
-      done: actionCreator<Success<P, S>>(`${type}_DONE`, commonMeta, false),
-      failed: actionCreator<Failure<P, E>>(`${type}_FAILED`, commonMeta, true),
+      started: actionCreator<P, M>(`${type}_STARTED`, commonMeta),
+      done: actionCreator<Done<P, S>, M>(`${type}_DONE`, commonMeta),
+      failed: actionCreator<Fail<P, E>, M>(`${type}_FAILED`, commonMeta, true),
     };
   }
 
   return Object.assign(actionCreator, { async: asyncActionCreators });
 }
-
-export default actionCreatorFactory;

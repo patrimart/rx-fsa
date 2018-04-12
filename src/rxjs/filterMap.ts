@@ -6,8 +6,8 @@ import { Action, ActionCreator } from "../actions";
 
 import { ResponseFns } from "./filterMapAsync";
 
-const filterMapBase = (mapper: typeof mergeMap) => <P, R, E>(
-  action: ActionCreator<P>,
+const filterMapBase = (mapper: typeof mergeMap) => <P, R, E, M>(
+  action: ActionCreator<P, M>,
   svcFn: (params: P) => Observable<R>,
   failureFn: ResponseFns<P, E> = () => [],
   successFn: ResponseFns<P, R> = () => [],

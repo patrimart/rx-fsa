@@ -1,41 +1,39 @@
-export interface Action<P = any, M = void> {
-  type: string;
-  payload: P;
-  meta: M;
-  error?: true;
+export interface Action<P = any, M = any> {
+  readonly type: string;
+  readonly payload: P;
+  readonly meta?: M;
+  readonly error?: true;
 }
 
-export interface Success<P, S> {
-  params: P;
-  result: S;
+export interface Done<P, S> {
+  readonly params: P;
+  readonly result: S;
 }
 
-export interface Failure<P, E> {
-  params: P;
-  error: E;
+export interface Fail<P, E> {
+  readonly params: P;
+  readonly error: E;
 }
 
-export interface ActionCreator<P> {
-  type: string;
-  match: (action: Action) => action is Action<P>;
-  <M = void>(payload: P, meta: M): Action<P, M>;
+export interface EmptyActionCreator<M> extends ActionCreator<void, M> {
+  <M2>(meta?: M): Action<void, M & M2>;
 }
 
-export interface EmptyActionCreator extends ActionCreator<void> {
-  <M = void>(payload?: void, meta?: M): Action<undefined, M>;
+export interface AsyncActionCreators<P, S, E, M> {
+  readonly type: string;
+  readonly started: ActionCreator<P, M>;
+  readonly done: ActionCreator<Done<P, S>, M>;
+  readonly failed: ActionCreator<Fail<P, E>, M>;
 }
 
-export interface AsyncActionCreators<P, S, E> {
-  type: string;
-  started: ActionCreator<P>;
-  done: ActionCreator<Success<P, S>>;
-  failed: ActionCreator<Failure<P, E>>;
+export interface ActionCreator<P, M> {
+  <M2>(payload: P, meta?: M2): Action<P, M & M2>;
+  readonly type: string;
+  readonly match: <M2>(action: Action) => action is Action<P, M & M2>;
 }
 
-export interface ActionCreatorFactory<M> {
-  (type: string, commonMeta?: M, error?: boolean): EmptyActionCreator;
-  <P>(type: string, commonMeta?: M, isError?: boolean | ((payload: P) => boolean)): ActionCreator<P>;
-
-  async<P, S>(type: string, commonMeta?: M): AsyncActionCreators<P, S, any>;
-  async<P, S, E>(type: string, commonMeta?: M): AsyncActionCreators<P, S, E>;
+export interface ActionCreatorFactory {
+  <M, M2>(type: string, commonMeta?: M, error?: true): EmptyActionCreator<M>;
+  <P, M>(type: string, commonMeta?: M, error?: true): ActionCreator<P, M>;
+  readonly async: <P, S, E, M>(type: string, commonMeta?: M) => AsyncActionCreators<P, S, E, M>;
 }

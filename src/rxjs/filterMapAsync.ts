@@ -7,8 +7,8 @@ import { actionChainer } from "./utils";
 
 export type ResponseFns<P, R> = (params: P, resp: R, meta: any) => ReadonlyArray<Action<any>>;
 
-const filterMapAsyncBase = (mapper: typeof mergeMap) => <P, R, E>(
-  action: AsyncActionCreators<P, R, E>,
+const filterMapAsyncBase = (mapper: typeof mergeMap) => <P, R, E, M>(
+  action: AsyncActionCreators<P, R, E, M>,
   svcFn: (params: P) => Observable<R>,
   failureFn: ResponseFns<P, E> = () => [],
   successFn: ResponseFns<P, R> = () => [],

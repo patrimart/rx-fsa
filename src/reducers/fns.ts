@@ -4,16 +4,16 @@ import { Handler, Reducer, ReducerDefaultFn, ReducerFn, CasesFn } from "./interf
 /**
  * Case function matches ACtionCreator to handler.
  */
-export const caseFn = <S, P>(actionCreator: ActionCreator<P>, handler: Handler<S, P>): Reducer<S, P> => (
+export const caseFn = <S, P, M>(actionCreator: ActionCreator<P, M>, handler: Handler<S, P>): Reducer<S, P> => (
   s: S,
-  a: Action<P>,
+  a: Action<P, M>,
 ) => (isType(a, actionCreator) ? handler(s, a.payload) : s);
 
 /**
  * Case function matches multiple ActionCreators to a handler.
  */
 export const casesFn: CasesFn = <S>(
-  actionCreators: Array<ActionCreator<any>>,
+  actionCreators: Array<ActionCreator<any, any>>,
   handler: Handler<S, any>,
 ): Reducer<S, any> =>
   actionCreators.reduceRight((ra, ac) => (s: S, a: any) => ra(caseFn(ac, handler)(s, a), a), (s: S, _: any) => s);
