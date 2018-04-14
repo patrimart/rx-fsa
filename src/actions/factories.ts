@@ -7,7 +7,7 @@ export function actionCreatorFactory(prefix: string): ActionCreatorFactory {
       <M2 extends object>(payload: P, meta: M2): Action<P, M & M2 & Meta> => ({
         type,
         payload,
-        meta: Object.assign({ $$typeChain: [""] }, commonMeta, meta),
+        meta: Object.assign({ $$typeChain: [] } as Meta, commonMeta, meta),
         error,
       }),
       {
