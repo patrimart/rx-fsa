@@ -19,24 +19,24 @@ export interface Fail<P, E> {
   readonly error: E;
 }
 
-export interface EmptyActionCreator<M extends Meta> extends ActionCreator<void, M> {
-  <M2 extends Meta>(meta: M): Action<void, M & M2>;
+export interface ActionCreator<P, M extends object> {
+  <M2 extends object>(payload: P, meta: M2): Action<P, M & M2 & Meta>;
+  readonly type: string;
+  readonly match: (action: Action<any, any>) => boolean;
 }
 
-export interface AsyncActionCreators<P, S, E, M extends Meta> {
+export interface EmptyActionCreator<M extends object> extends ActionCreator<void, M> {
+  <M2 extends object>(meta: M): Action<void, M & M2 & Meta>;
+}
+
+export interface AsyncActionCreators<P, S, E, M extends object> {
   readonly type: string;
   readonly started: ActionCreator<P, M>;
   readonly done: ActionCreator<Done<P, S>, M>;
   readonly failed: ActionCreator<Fail<P, E>, M>;
 }
 
-export interface ActionCreator<P, M extends Meta> {
-  <M2 extends Meta>(payload: P, meta: M2): Action<P, M & M2>;
-  readonly type: string;
-  readonly match: (action: Action<any, any>) => boolean;
-}
-
 export interface ActionCreatorFactory {
-  <P, M extends Meta>(type: string, commonMeta: M, error: boolean): ActionCreator<P, M>;
-  readonly async: <P, S, E, M extends Meta>(type: string, commonMeta: M) => AsyncActionCreators<P, S, E, M>;
+  <P, M extends object>(type: string, commonMeta?: M, error?: boolean): ActionCreator<P, M>;
+  readonly async: <P, S, E, M extends object>(type: string, commonMeta?: M) => AsyncActionCreators<P, S, E, M>;
 }

@@ -1,17 +1,13 @@
 import { Action, ActionCreator, ActionCreatorFactory, AsyncActionCreators, Done, Fail, Meta } from "./interfaces";
 
 export function actionCreatorFactory(prefix: string): ActionCreatorFactory {
-  function actionCreator<P, M extends Meta>(
-    activity: string,
-    commonMeta = {} as M,
-    error = false,
-  ): ActionCreator<P, M> {
+  function actionCreator<P, M extends object>(activity: string, commonMeta?: M, error = false): ActionCreator<P, M> {
     const type = prefix + "/" + activity;
     return Object.assign(
-      <M2 extends Meta>(payload: P, meta: M2): Action<P, M & M2> => ({
+      <M2 extends object>(payload: P, meta: M2): Action<P, M & M2 & Meta> => ({
         type,
         payload,
-        meta: Object.assign(commonMeta, meta),
+        meta: Object.assign({ $$typeChain: [""] }, commonMeta, meta),
         error,
       }),
       {
@@ -21,9 +17,9 @@ export function actionCreatorFactory(prefix: string): ActionCreatorFactory {
     );
   }
 
-  function asyncActionCreators<P, S, E, M extends Meta>(
+  function asyncActionCreators<P, S, E, M extends object>(
     type: string,
-    commonMeta = {} as M,
+    commonMeta?: M,
   ): AsyncActionCreators<P, S, E, M> {
     return {
       type: prefix + "/" + type,
