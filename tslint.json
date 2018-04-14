@@ -5,6 +5,7 @@
         "interface-name": [true, "never-prefix"],
         "no-bitwise": false,
         "object-literal-sort-keys": false,
-        "semicolon": [true, "always", "ignore-bound-class-methods"]
+        "semicolon": [true, "always", "ignore-bound-class-methods"],
+        "trailing-comma": false,
     }
 }

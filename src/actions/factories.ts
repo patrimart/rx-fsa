@@ -1,12 +1,14 @@
-import { Action, ActionCreator, ActionCreatorFactory, AsyncActionCreators, Done, Fail } from "./interfaces";
+import { Action, ActionCreator, ActionCreatorFactory, AsyncActionCreators, Done, Fail, Meta } from "./interfaces";
 
 export function actionCreatorFactory(prefix: string): ActionCreatorFactory {
-  const base = prefix + "/";
-
-  function actionCreator<P, M>(activity: string, commonMeta?: M, error?: true): ActionCreator<P, M> {
-    const type = base + activity;
+  function actionCreator<P, M extends Meta>(
+    activity: string,
+    commonMeta = {} as M,
+    error = false,
+  ): ActionCreator<P, M> {
+    const type = prefix + "/" + activity;
     return Object.assign(
-      <M2>(payload: P, meta?: M2): Action<P, M & M2> => ({
+      <M2 extends Meta>(payload: P, meta: M2): Action<P, M & M2> => ({
         type,
         payload,
         meta: Object.assign(commonMeta, meta),
@@ -14,14 +16,17 @@ export function actionCreatorFactory(prefix: string): ActionCreatorFactory {
       }),
       {
         type,
-        match: (action: Action): action is Action<P> => action.type === type,
+        match: <M2 extends Meta>(action: Action<any, any>): action is Action<P, M & M2> => action.type === type,
       },
     );
   }
 
-  function asyncActionCreators<P, S, E, M>(type: string, commonMeta?: M): AsyncActionCreators<P, S, E, M> {
+  function asyncActionCreators<P, S, E, M extends Meta>(
+    type: string,
+    commonMeta = {} as M,
+  ): AsyncActionCreators<P, S, E, M> {
     return {
-      type: base + type,
+      type: prefix + "/" + type,
       started: actionCreator<P, M>(`${type}_STARTED`, commonMeta),
       done: actionCreator<Done<P, S>, M>(`${type}_DONE`, commonMeta),
       failed: actionCreator<Fail<P, E>, M>(`${type}_FAILED`, commonMeta, true),

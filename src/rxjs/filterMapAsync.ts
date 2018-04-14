@@ -2,25 +2,36 @@ import { Observable } from "rxjs/Observable";
 import { from } from "rxjs/observable/from";
 import { catchError, concatMap, exhaustMap, filter, map, mergeMap, switchMap } from "rxjs/operators";
 
-import { Action, AsyncActionCreators } from "../actions";
+import { Action, AsyncActionCreators, Done, Fail, Meta } from "../actions/interfaces";
 import { actionChainer } from "./utils";
+import { ResponseFns } from "./interfaces";
 
-export type ResponseFns<P, R> = (params: P, resp: R, meta: any) => ReadonlyArray<Action<any>>;
-
-const filterMapAsyncBase = (mapper: typeof mergeMap) => <P, R, E, M>(
+const filterMapAsyncBase = (mapper: typeof mergeMap) => <P, R, E, M extends Meta>(
   action: AsyncActionCreators<P, R, E, M>,
-  svcFn: (params: P) => Observable<R>,
-  failureFn: ResponseFns<P, E> = () => [],
-  successFn: ResponseFns<P, R> = () => [],
-) => (obs: Observable<Action<any>>) => {
+  project: (params: P) => Observable<R>,
+  failureFn: ResponseFns<P, E, M> = () => [],
+  successFn: ResponseFns<P, R, M> = () => [],
+) => (obs: Observable<Action<any, any>>) => {
   const ac = actionChainer(action.started.type);
   return obs.pipe(
     filter(action.started.match),
-    map(({ payload: params, meta }) => ({ params, meta: ac(meta || undefined) })),
+    map(({ payload: params, meta }) => ({ params, meta: ac(meta) })),
     mapper(({ params, meta }) =>
-      svcFn(params).pipe(
-        mergeMap((result: R) => from([action.done({ params, result }, meta)].concat(successFn(params, result, meta)))),
-        catchError(error => from([action.failed({ params, error }, meta)].concat(failureFn(params, error, meta)))),
+      project(params).pipe(
+        mergeMap((result: R) =>
+          from(
+            [action.done({ params, result }, meta) as Action<Done<P, R>, M & {}>].concat(
+              successFn(params, result, meta),
+            ),
+          ),
+        ),
+        catchError(error =>
+          from(
+            [action.failed({ params, error }, meta) as Action<Fail<P, E>, M & {}>].concat(
+              failureFn(params, error, meta),
+            ),
+          ),
+        ),
       ),
     ),
   );

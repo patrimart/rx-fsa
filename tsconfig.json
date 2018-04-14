@@ -1,7 +1,13 @@
 {
     "compilerOptions": {
-        "module": "commonjs",
-        "noEmit": true,
+        "module": "es2015",
+        "moduleResolution": "node",
+        "lib": [
+            "es2016"
+        ],
+        "outDir": "package",
+        "noEmit": false,
+        "declaration": true,
         "noFallthroughCasesInSwitch": true,
         "noImplicitReturns": true,
         "noUnusedLocals": true,
@@ -9,7 +15,7 @@
         "skipLibCheck": true,
         "strict": true,
         "strictFunctionTypes": true,
-        "target": "es2016"
+        "target": "es5"
     },
-    "include": ["src/**/*", "__tests__/**/*"]
+    "files": ["src/index.ts"]
 }
