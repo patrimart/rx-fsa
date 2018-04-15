@@ -20,13 +20,13 @@ export interface Fail<P, E> {
 }
 
 export interface ActionCreator<P, M extends object> {
-  <M2 extends object>(payload: P, meta: M2): Action<P, M & M2 & Meta>;
+  <M2 extends object>(payload: P, meta?: M2): Action<P, M & M2 & Meta>;
   readonly type: string;
   readonly match: (action: Action<any, any>) => boolean;
 }
 
 export interface EmptyActionCreator<M extends object> extends ActionCreator<void, M> {
-  <M2 extends object>(meta: M): Action<void, M & M2 & Meta>;
+  <M2 extends object>(meta?: M): Action<void, M & M2 & Meta>;
 }
 
 export interface AsyncActionCreators<P, S, E, M extends object> {
@@ -37,6 +37,6 @@ export interface AsyncActionCreators<P, S, E, M extends object> {
 }
 
 export interface ActionCreatorFactory {
-  <P, M extends object>(type: string, commonMeta?: M, error?: boolean): ActionCreator<P, M>;
+  <P = void, M extends object = Meta>(type: string, commonMeta?: M, error?: boolean): ActionCreator<P, M>;
   readonly async: <P, S, E, M extends object>(type: string, commonMeta?: M) => AsyncActionCreators<P, S, E, M>;
 }
