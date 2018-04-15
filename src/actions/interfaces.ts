@@ -59,5 +59,5 @@ export interface AsyncActionCreators<P, S, E, M extends object> {
  */
 export interface ActionCreatorFactory {
   <P = void, M extends object = Meta>(type: string, commonMeta?: M, error?: boolean): ActionCreator<P, M>;
-  readonly async: <P, S, E, M extends object>(type: string, commonMeta?: M) => AsyncActionCreators<P, S, E, M>;
+  readonly async: <P, S, E, M extends object = Meta>(type: string, commonMeta?: M) => AsyncActionCreators<P, S, E, M>;
 }
