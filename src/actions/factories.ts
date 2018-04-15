@@ -1,7 +1,7 @@
 import { Action, ActionCreator, ActionCreatorFactory, AsyncActionCreators, Done, Fail, Meta } from "./interfaces";
 
 /**
- *
+ * Factory for creating actions.
  * @param group
  */
 export const actionCreatorFactory = (group: string): ActionCreatorFactory => {
@@ -10,7 +10,7 @@ export const actionCreatorFactory = (group: string): ActionCreatorFactory => {
 };
 
 /**
- *
+ * Syncronous Actions creator.
  * @param action
  * @param [commonMeta]
  * @param [error]
@@ -30,13 +30,13 @@ const actionCreator = (group: string) => <P = void, M extends object = Meta>(
     }),
     {
       type,
-      match: <M2 extends Meta>(action: Action<any, any>): action is Action<P, M & M2> => action.type === type,
+      match: <M2 extends Meta>(a: Action<any, any>): a is Action<P, M & M2> => a.type === type,
     },
   );
 };
 
 /**
- *
+ * Async Actions creator factory.
  * @param result
  * @param [commonMeta]
  */

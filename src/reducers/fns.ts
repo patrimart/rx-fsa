@@ -1,4 +1,4 @@
-import { Action, ActionCreator, Meta, isType } from "../actions";
+import { Action, ActionCreator, isType, Meta } from "../actions";
 import { CasesFn, Handler, Reducer, ReducerFn } from "./interfaces";
 
 /**
@@ -7,7 +7,7 @@ import { CasesFn, Handler, Reducer, ReducerFn } from "./interfaces";
 export const caseFn = <S, P, M extends Meta>(
   actionCreator: ActionCreator<P, M>,
   handler: Handler<S, P>,
-): Reducer<S, P, M> => (s: S, a: Action<P, M>) => (isType(a, actionCreator) ? handler(s, a.payload) : s);
+): Reducer<S, P, M> => (s: S, a: Action<P, M>) => (isType(actionCreator)(a) ? handler(s, a.payload) : s);
 
 /**
  * Case function matches multiple ActionCreators to a handler.

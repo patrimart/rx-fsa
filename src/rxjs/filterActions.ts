@@ -7,7 +7,8 @@ import { Action, ActionCreator, Meta } from "../actions/interfaces";
  * RxJS operator to filter acitons by multiple `ActionCreator`s.
  * @param actions The `ActionCreator`s to match against the actions.
  */
-export const filterActions: FilterActions = (...actions: ActionCreator<any, Meta>[]) => {
+// tslint:disable-next-line:array-type
+export const filterActions: FilterActions = (...actions: ActionCreator<any, any>[]) => {
   const actionMatcher = actions.reduce<(a: Action<any, Meta>) => boolean>(
     (as, a) => b => as(b) || a.match(b),
     _ => false,

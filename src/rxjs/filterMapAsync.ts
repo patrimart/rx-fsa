@@ -3,8 +3,8 @@ import { from } from "rxjs/observable/from";
 import { catchError, concatMap, exhaustMap, filter, map, mergeMap, switchMap } from "rxjs/operators";
 
 import { Action, AsyncActionCreators, Done, Fail, Meta } from "../actions/interfaces";
-import { actionChainer } from "./utils";
 import { ResponseFns } from "./interfaces";
+import { actionChainer } from "./utils";
 
 const filterMapAsyncBase = (mapper: typeof mergeMap) => <P, R, E, M extends Meta>(
   action: AsyncActionCreators<P, R, E, M>,
