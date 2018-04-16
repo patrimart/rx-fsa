@@ -1,6 +1,6 @@
 import "jest";
 
-import { actionCreatorFactory, caseFn, casesFn, Re, reducerDefaultFn, reducerFn } from "../src";
+import { actionCreatorFactory, caseFn, casesFn, Re, reducerDefaultFn, reducerFn } from "../../src";
 
 test("Reducers", () => {
   const fooActionFactory = actionCreatorFactory("FOO");

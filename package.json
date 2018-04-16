@@ -2,14 +2,24 @@
   "name": "rx-fsa-dev",
   "version": "0.3.0",
   "description": ".",
-  "main": "dist/index.js",
-  "types": "dist/index",
-  "files": ["dist/"],
   "repository": {
     "type": "git",
     "url": "git://github.com/patrimart/rx-fsa.git"
   },
-  "keywords": ["angular", "react", "ngrx", "redux", "typescript", "action", "reducer", "rxjs", "observables"],
+  "keywords": [
+    "angular",
+    "react",
+    "flux",
+    "fsa",
+    "actions",
+    "ngrx",
+    "redux",
+    "typescript",
+    "action",
+    "reducer",
+    "rxjs",
+    "observables"
+  ],
   "author": "Patrick Martin",
   "license": "MIT",
   "bugs": {
@@ -18,8 +28,8 @@
   "homepage": "https://github.com/patrimart",
   "scripts": {
     "build": "npm run _delPackageDir && tsc && npm run _copyPackageDeps",
-    "_delPackageDir": "rm -rf pacakge/",
-    "_copyPackageDeps": "cp -f package-dist.json package/package.json",
+    "_delPackageDir": "rm -rf package/",
+    "_copyPackageDeps": "cp -f package-dist.json package/package.json && cp -f README.md package/",
     "test": "jest tests"
   },
   "devDependencies": {

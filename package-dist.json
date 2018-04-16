@@ -1,16 +1,32 @@
 {
   "name": "rx-fsa",
   "version": "0.3.0",
-  "description": ".",
+  "author": "Patrick Martin",
+  "license": "MIT",
+  "description": "This TypeScript library provides factories for creating fully typed FSA-compliant Actions, reducers and RxJS utility operators.",
+  "keywords": [
+    "angular",
+    "react",
+    "flux",
+    "fsa",
+    "actions",
+    "ngrx",
+    "redux",
+    "typescript",
+    "action",
+    "reducer",
+    "rxjs",
+    "observables"
+  ],
   "main": "index.js",
-  "types": "index.d.ts",
+  "typings": "index",
+  "typescript": {
+    "definition": "index"
+  },
   "repository": {
     "type": "git",
     "url": "git://github.com/patrimart/rx-fsa.git"
   },
-  "keywords": ["ngrx", "redux", "typescript", "action", "reducer"],
-  "author": "Patrick Martin",
-  "license": "MIT",
   "bugs": {
     "url": "https://github.com/patrimart/rx-fsa/issues"
   },

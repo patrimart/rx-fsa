@@ -1,5 +1,5 @@
 import "jest";
-import { actionCreatorFactory } from "../src";
+import { actionCreatorFactory } from "../../src";
 
 test("Empty Action", () => {
   const fooActionFactory = actionCreatorFactory("FOO");
