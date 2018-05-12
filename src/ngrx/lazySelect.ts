@@ -32,8 +32,8 @@ export function lazySelectFactory<S, R, V, P = any, M extends Meta = any>(
   actions: ((v?: V) => Array<Action<P, M>>) | Action<P, M>,
   predicate = (r: R | null | undefined) => !!r,
 ) {
-  const selectorFn = "projector" in selector ? (_?: V) => selector : selector;
-  const actionsFn = typeof actions === "function" ? actions : (_?: V) => [actions];
+  const selectorFn = "projector" in selector ? () => selector : selector;
+  const actionsFn = typeof actions === "function" ? actions : () => [actions];
   return (store$: Store<S>) => (v?: V) => (source: Observable<S>) =>
     source.pipe(
       select(selectorFn(v)),

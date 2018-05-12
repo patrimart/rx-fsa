@@ -4,7 +4,8 @@ This TypeScript library provides:
 
 - Factories for creating fully-typed FSA-compliant Actions.
 - Composable reducers and Action filters.
-- RxJS operators for easier async Effects set-up.
+- `RxJS` operators for easier async Effects set-up.
+- `@ngrx/store` lazy MemoizedSelector
 
 ```ts
 export interface Action<P, M extends Meta> {
