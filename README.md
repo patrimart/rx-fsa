@@ -15,16 +15,15 @@ export interface Action<P, M extends Meta> {
 }
 ```
 
-
-## Installation
+# Installation
 
 ```
 npm i -S rx-fsa
 ```
 
-## Usage
+# Usage
 
-### Basic Empty and Syncronous Actions
+## Basic Empty and Syncronous Actions
 
 ```ts
 import { actionCreatorFactory } from "rx-fsa/actions";
@@ -40,16 +39,18 @@ const decrementCounterFactory = counterActionFactory<number>("INCREMENT");
 const decrementAction = (count: number) => decrementCounterFactory(count);
 ```
 
-### Async Action Creators
+## Async Action Creators
 
 ```ts
 const saveCountFactory = counterActionFactory.async<{ count: 100 }, void, Error>("SAVE");
-const saveCountStarted = saveCountFactory.started({ count: 100 });
-const saveCountDone = saveCountFactory.done({ result: 100, params: { count: 100 } });
-const saveCountFailed = saveCountFactory.failed({ error: new Error("File not saved."), params: { count: 100 } });
+const saveCountStartedAction = saveCountFactory.started({ count: 100 });
+const saveCountDoneAction = saveCountFactory.done({ result: 100, params: { count: 100 } });
+const saveCountFailedAction = saveCountFactory.failed({ error: new Error("File not saved."), params: { count: 100 } });
 ```
 
-### Reducers
+---
+
+## Reducers
 
 ```ts
 import { caseFn, Re, reducerDefaultFn } from "rx-fsa/reducers";
@@ -76,7 +77,9 @@ export const reducers = reducerDefaultFn(INIT_STATE)(
 );
 ```
 
-### RxJS Operators
+---
+
+## RxJS Operators
 
 The following operators are provided under `rx-fsa/rxjs`:
 - filterConcatAsync
@@ -95,7 +98,7 @@ import { filterExhaustAsync } from "rx-fsa/rxjs";
 
 @Effect()
 public saveCount$ = this.action$.pipe(
-    filterExhaustAsync(saveCountFactory, params => this.backend.save(params)),
+    filterExhaustAsync(saveCountFactory, params => this.httpSvc.save(params)),
 );
 ```
 The above is equivalent to:
@@ -103,18 +106,50 @@ The above is equivalent to:
 @Effect()
 public saveCount$ = this.action$.pipe(
   filter(saveCountFactory.started.match),
-  mergeMap((result: R) => this.backend.save(params).pipe(
+  mergeMap((result: R) => this.httpSvc.save(params).pipe(
     map(result = saveCountFactory.done({ result, params })),
     catchError(error => saveCountFactory.failed({ error, params }),
   ),
 );
 ```
 
-## API
+---
+
+## Lazy Selector
+
+Create a `MemoizedSelector` that will emit a store slice or, if unavailable, dispatch action(s) to set the store slice and then emit.
+
+```ts
+// selectors.ts
+import { createSelector } from "@ngrx/store";
+import { lazySelectorFactory } from "rx-fsa/ngrx";
+
+export const selectFeature = (state: AppState) => state.feature;
+export const selectFeatureCount = createSelector(selectFeature, state => state.counter);
+
+export const lazySelectFeatureCount = lazySelectorFactory(selectFeatureCount, loadFeatureAction);
+```
+
+```ts
+// app.component.ts
+import { lazySelectFeatureCount } from './selectors';
+
+@Component({ ... })
+class MyAppComponent {
+  counter: Observable<number>;
+
+  constructor(private store: Store<AppState>) {
+    const selectFeatureCount = lazySelectFeatureCount(store);
+    this.counter = store.pipe(select(selectFeatureCount()));
+  }
+}
+```
+
+# API
 
 API Documentation is coming soon. The library is small to scour through in GitHub to learn more.
 
-## Credits
+# Credits
 
 This library was inspired by:
 - https://github.com/aikoven/typescript-fsa
