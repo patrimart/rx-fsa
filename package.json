@@ -43,6 +43,7 @@
     "typescript": "^2.8.3"
   },
   "peerDependencies": {
+    "@ngrx/store": "^5.2.0",
     "rxjs": "^5.0.0"
   },
   "jest": {
