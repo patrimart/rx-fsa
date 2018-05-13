@@ -18,10 +18,13 @@
     "rxjs",
     "observables"
   ],
-  "main": "index.js",
-  "typings": "index",
+  "main": "index.umd.js",
+  "module": "lens.es5.js",
+  "es2015": "index.js",
+  "browser": "index.js",
+  "typings": "index.d.ts",
   "typescript": {
-    "definition": "index"
+    "definition": "index.d.ts"
   },
   "repository": {
     "type": "git",

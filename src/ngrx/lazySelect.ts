@@ -3,7 +3,7 @@ import { filter, map } from "rxjs/operators";
 
 import { MemoizedSelector, select, Store } from "@ngrx/store";
 
-import { Action, Meta } from "../actions/";
+import { Action, Meta } from "../actions/interfaces";
 
 /**
  * Builds a MemoizedSelector that, if the predicate fails, will dispatch action(s)

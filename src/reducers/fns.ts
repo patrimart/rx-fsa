@@ -1,4 +1,5 @@
-import { Action, ActionCreator, isType, Meta } from "../actions";
+import { Action, ActionCreator, Meta } from "../actions/interfaces";
+import { isType } from "../actions/utils";
 import { CasesFn, Handler, Reducer, ReducerFn } from "./interfaces";
 
 /**

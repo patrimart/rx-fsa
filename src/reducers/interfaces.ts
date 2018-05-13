@@ -1,4 +1,4 @@
-import { Action, ActionCreator, Meta } from "../actions";
+import { Action, ActionCreator, Meta } from "../actions/interfaces";
 
 export type Reducer<S, P, M extends Meta> = (state: S, action: Action<P, M>) => S;
 

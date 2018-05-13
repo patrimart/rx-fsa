@@ -27,9 +27,10 @@
   },
   "homepage": "https://github.com/patrimart",
   "scripts": {
-    "build": "npm run _delPackageDir && tsc && npm run _copyPackageDeps",
+    "build": "npm run _delPackageDir && tsc && npm run _copyPackageDeps && npm run _rollup",
     "_delPackageDir": "rm -rf package/",
     "_copyPackageDeps": "cp -f package-dist.json package/package.json && cp -f README.md package/",
+    "_rollup": "./node_modules/.bin/rollup -c rollup.es5.js && ./node_modules/.bin/rollup -c rollup.umd.js",
     "test": "jest tests"
   },
   "devDependencies": {
@@ -37,6 +38,7 @@
     "@types/jest": "^22.2.3",
     "jest": "^22.4.3",
     "prettier": "^1.12.0",
+    "rollup": "^0.58.2",
     "rxjs": "^5.5.10",
     "ts-jest": "^22.4.3",
     "tslint": "^5.9.1",
