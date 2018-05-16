@@ -1,4 +1,4 @@
-# FSA Reducers and RxJS Utils
+# FSA Actions, Reducers, Matchers and RxJS Utils
 
 This TypeScript library provides:
 

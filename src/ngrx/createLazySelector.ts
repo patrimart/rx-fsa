@@ -3,35 +3,47 @@ import { filter, map } from "rxjs/operators";
 
 import { MemoizedSelector, select, Store } from "@ngrx/store";
 
-import { Action, Meta } from "../actions/interfaces";
+import { Action } from "../actions/";
+
+export type LazySelector<S, R, V> = (
+  store$: Store<S>,
+) => (v?: V) => (source: Observable<S>) => Observable<NonNullable<R>>;
+
+export type SelectorProd<S, R, V> =
+  | MemoizedSelector<S, R | undefined>
+  | (() => MemoizedSelector<S, R | undefined>)
+  | ((v: V) => MemoizedSelector<S, R | undefined>);
+
+export type ActionProd<P, V> = Action<P, any> | (() => Array<Action<P, any>>) | ((v: V) => Array<Action<P, any>>);
 
 /**
  * Builds a MemoizedSelector that, if the predicate fails, will dispatch action(s)
  * to ultimately satisfy the predicate and emit a value.
  */
-export function lazySelectFactory<S, R, P = any, M extends Meta = any>(
+
+export function createLazySelector<S, R, P = any>(
   selector: MemoizedSelector<S, R>,
-  action: Action<P, M>,
+  action: Action<P, any>,
   predicate?: (r: R | null | undefined) => boolean,
-): (store$: Store<S>) => () => (source: Observable<S>) => Observable<R>;
+): LazySelector<S, R, void>;
 
-export function lazySelectFactory<S, R, P = any, M extends Meta = any>(
+export function createLazySelector<S, R, P = any>(
   selector: () => MemoizedSelector<S, R>,
-  actions: () => Array<Action<P, M>>,
+  actions: () => Array<Action<P, any>>,
   predicate?: (r: R | null | undefined) => boolean,
-): (store$: Store<S>) => () => (source: Observable<S>) => Observable<R>;
+): LazySelector<S, R, void>;
 
-export function lazySelectFactory<S, R, V, P = any, M extends Meta = any>(
+export function createLazySelector<S, R, V, P = any>(
   selector: (() => MemoizedSelector<S, R>) | ((v: V) => MemoizedSelector<S, R>),
-  actions: (() => Array<Action<P, M>>) | ((v: V) => Array<Action<P, M>>),
+  actions: (() => Array<Action<P, any>>) | ((v: V) => Array<Action<P, any>>),
   predicate?: (r: R | null | undefined) => boolean,
-): (store$: Store<S>) => (v: V) => (source: Observable<S>) => Observable<R>;
+): LazySelector<S, R, V>;
 
-export function lazySelectFactory<S, R, V, P = any, M extends Meta = any>(
+export function createLazySelector<S, R, V, P = any>(
   selector: ((v?: V) => MemoizedSelector<S, R>) | MemoizedSelector<S, R>,
-  actions: ((v?: V) => Array<Action<P, M>>) | Action<P, M>,
+  actions: ((v?: V) => Array<Action<P, any>>) | Action<P, any>,
   predicate = (r: R | null | undefined) => !!r,
-) {
+): LazySelector<S, R, V> {
   const selectorFn = "projector" in selector ? () => selector : selector;
   const actionsFn = typeof actions === "function" ? actions : () => [actions];
   return (store$: Store<S>) => (v?: V) => (source: Observable<S>) =>
@@ -44,6 +56,6 @@ export function lazySelectFactory<S, R, V, P = any, M extends Meta = any>(
         }
         return result;
       }),
-      filter((obj: R | undefined): obj is R => obj !== undefined),
+      filter((obj: R | undefined): obj is NonNullable<R> => obj !== undefined),
     );
 }
