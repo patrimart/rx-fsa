@@ -34,6 +34,7 @@
     "test": "jest tests"
   },
   "devDependencies": {
+    "@angular/core": "^5.2.10",
     "@ngrx/store": "^5.2.0",
     "@types/jest": "^22.2.3",
     "jest": "^22.4.3",

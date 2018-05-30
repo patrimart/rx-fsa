@@ -1,3 +1,4 @@
+import { UnaryFunction } from "rxjs/interfaces";
 import { Observable } from "rxjs/Observable";
 import { filter, map } from "rxjs/operators";
 
@@ -7,7 +8,7 @@ import { Action } from "../actions/";
 
 export type LazySelector<S, R, V> = (
   store$: Store<S>,
-) => (v?: V) => (source: Observable<S>) => Observable<NonNullable<R>>;
+) => (v?: V) => UnaryFunction<Observable<S>, Observable<NonNullable<R>>>;
 
 export type SelectorProd<S, R, V> =
   | MemoizedSelector<S, R | undefined>
@@ -21,25 +22,25 @@ export type ActionProd<P, V> = Action<P, any> | (() => Array<Action<P, any>>) | 
  * to ultimately satisfy the predicate and emit a value.
  */
 
-export function createLazySelector<S, R, P = any>(
+export function createLazySelector<S, R, P>(
   selector: MemoizedSelector<S, R>,
   action: Action<P, any>,
   predicate?: (r: R | null | undefined) => boolean,
 ): LazySelector<S, R, void>;
 
-export function createLazySelector<S, R, P = any>(
+export function createLazySelector<S, R, P>(
   selector: () => MemoizedSelector<S, R>,
   actions: () => Array<Action<P, any>>,
   predicate?: (r: R | null | undefined) => boolean,
 ): LazySelector<S, R, void>;
 
-export function createLazySelector<S, R, V, P = any>(
+export function createLazySelector<S, R, V, P>(
   selector: (() => MemoizedSelector<S, R>) | ((v: V) => MemoizedSelector<S, R>),
   actions: (() => Array<Action<P, any>>) | ((v: V) => Array<Action<P, any>>),
   predicate?: (r: R | null | undefined) => boolean,
 ): LazySelector<S, R, V>;
 
-export function createLazySelector<S, R, V, P = any>(
+export function createLazySelector<S, R, V, P>(
   selector: ((v?: V) => MemoizedSelector<S, R>) | MemoizedSelector<S, R>,
   actions: ((v?: V) => Array<Action<P, any>>) | Action<P, any>,
   predicate = (r: R | null | undefined) => !!r,

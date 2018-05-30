@@ -37,7 +37,7 @@ export interface Fail<P, E> {
 export interface ActionCreator<P, M extends object> {
   <M2 extends object>(payload: P, meta?: M2): Action<P, M & M2 & Meta>;
   readonly type: string;
-  readonly match: (action: Action<any, any>) => boolean;
+  readonly match: (action: Action<any, any>) => action is Action<P, M & Meta>;
 }
 
 // export interface EmptyActionCreator<M extends object> extends ActionCreator<void, M> {

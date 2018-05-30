@@ -30,7 +30,7 @@ const actionCreator = (group: string) => <P = void, M extends object = Meta>(
     }),
     {
       type,
-      match: <M2 extends Meta>(a: Action<any, any>): a is Action<P, M & M2> => a.type === type,
+      match: (a: Action<any, any>): a is Action<P, M & Meta> => a.type === type,
     },
   );
 };
