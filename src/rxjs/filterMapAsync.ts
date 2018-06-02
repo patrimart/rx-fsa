@@ -4,18 +4,15 @@ import { catchError, concatMap, exhaustMap, filter, map, mergeMap, switchMap } f
 
 import { Action, AsyncActionCreators, Done, Fail, Meta } from "../actions/interfaces";
 import { ResponseFns } from "./interfaces";
-import { actionChainer } from "./utils";
 
 const filterMapAsyncBase = (mapper: typeof mergeMap) => <P, R, E, M extends Meta>(
   action: AsyncActionCreators<P, R, E, M>,
   project: (params: P) => Observable<R>,
   failureFn: ResponseFns<P, E, M> = () => [],
   successFn: ResponseFns<P, R, M> = () => [],
-) => (obs: Observable<Action<any, any>>) => {
-  const ac = actionChainer(action.started.type);
-  return obs.pipe(
+) => (obs: Observable<Action<any, any>>) => obs.pipe(
     filter(action.started.match),
-    map(({ payload: params, meta }) => ({ params, meta: ac(meta) })),
+    map(({ payload: params, meta }) => ({ params, meta })),
     mapper(({ params, meta }) =>
       project(params).pipe(
         mergeMap((result: R) =>
@@ -35,7 +32,6 @@ const filterMapAsyncBase = (mapper: typeof mergeMap) => <P, R, E, M extends Meta
       ),
     ),
   );
-};
 
 /**
  * Filters on the `started` Action of the AsyncActionCreator.
