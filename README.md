@@ -24,7 +24,7 @@ export interface Action<P, M extends Meta = Meta> {
 npm i rx-fsa
 ```
 
-Compatible with `Angular 6` and `RxJS 6`.
+`/ngrx` and `/rxjs` libs are compatible with `Angular 6` and `RxJS 6`.
 
 # Usage
 
