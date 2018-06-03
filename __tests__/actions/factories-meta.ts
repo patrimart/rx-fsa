@@ -6,7 +6,7 @@ test("Empty Action", () => {
   const emptyFoo = fooActionFactory("EMPTY", { foo: true });
   const emptyFooAction = emptyFoo(undefined, { bar: true });
 
-  expect(emptyFooAction.meta).toMatchObject({ $$typeChain: [], foo: true, bar: true });
+  expect(emptyFooAction.meta).toMatchObject({ foo: true, bar: true });
 });
 
 test("Syncronous Action", () => {
@@ -14,7 +14,7 @@ test("Syncronous Action", () => {
   const syncFoo = fooActionFactory<string, { foo: true }>("SYNC", { foo: true });
   const syncFooAction = syncFoo("Hello", { bar: true });
 
-  expect(syncFooAction.meta).toMatchObject({ $$typeChain: [], foo: true, bar: true });
+  expect(syncFooAction.meta).toMatchObject({ foo: true, bar: true });
 });
 
 test("Async Actions", () => {
@@ -24,9 +24,9 @@ test("Async Actions", () => {
   const asyncFooDone = asyncFoo.done({ result: 2, params: "Hello" }, { bar: 2 });
   const asyncFooFail = asyncFoo.failed({ error: new Error("Oops"), params: "Hello" }, { bar: 3 });
 
-  expect(asyncFooStart.meta).toMatchObject({ $$typeChain: [], foo: true, bar: 1 });
+  expect(asyncFooStart.meta).toMatchObject({ foo: true, bar: 1 });
 
-  expect(asyncFooDone.meta).toMatchObject({ $$typeChain: [], foo: true, bar: 2 });
+  expect(asyncFooDone.meta).toMatchObject({ foo: true, bar: 2 });
 
-  expect(asyncFooFail.meta).toMatchObject({ $$typeChain: [], foo: true, bar: 3 });
+  expect(asyncFooFail.meta).toMatchObject({ foo: true, bar: 3 });
 });

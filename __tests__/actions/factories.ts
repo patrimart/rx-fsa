@@ -8,7 +8,6 @@ test("Empty Action", () => {
 
   expect(emptyFoo.type).toBe("FOO/EMPTY");
   expect(emptyFooAction.error).toBeFalsy();
-  expect(emptyFooAction.meta).toMatchObject({ $$typeChain: [] });
   expect(emptyFooAction.payload).toBeUndefined();
   expect(emptyFooAction.type).toBe("FOO/EMPTY");
 
@@ -23,7 +22,6 @@ test("Syncronous Action", () => {
 
   expect(syncFoo.type).toBe("FOO/SYNC");
   expect(syncFooAction.error).toBeFalsy();
-  expect(syncFooAction.meta).toMatchObject({ $$typeChain: [] });
   expect(syncFooAction.payload).toBe("Hello");
   expect(syncFooAction.type).toBe("FOO/SYNC");
 
@@ -41,7 +39,6 @@ test("Async Actions", () => {
   expect(asyncFoo.type).toBe("FOO/ASYNC");
 
   expect(asyncFooStart.error).toBeFalsy();
-  expect(asyncFooStart.meta).toMatchObject({ $$typeChain: [] });
   expect(asyncFooStart.payload).toBe("Hello");
   expect(asyncFooStart.type).toBe("FOO/ASYNC_STARTED");
   expect(isType(asyncFoo.started)(asyncFooStart)).toBeTruthy();
@@ -50,7 +47,6 @@ test("Async Actions", () => {
   expect(asyncFoo.failed.match(asyncFooStart)).toBeFalsy();
 
   expect(asyncFooDone.error).toBeFalsy();
-  expect(asyncFooDone.meta).toMatchObject({ $$typeChain: [] });
   expect(asyncFooDone.payload).toMatchObject({ result: 2, params: "Hello" });
   expect(asyncFooDone.type).toBe("FOO/ASYNC_DONE");
   expect(isType(asyncFoo.done)(asyncFooDone)).toBeTruthy();
@@ -59,7 +55,6 @@ test("Async Actions", () => {
   expect(asyncFoo.failed.match(asyncFooDone)).toBeFalsy();
 
   expect(asyncFooFail.error).toBeTruthy();
-  expect(asyncFooFail.meta).toMatchObject({ $$typeChain: [] });
   expect(asyncFooFail.payload).toMatchObject({ error: new Error("Oops"), params: "Hello" });
   expect(asyncFooFail.type).toBe("FOO/ASYNC_FAILED");
   expect(isType(asyncFoo.failed)(asyncFooFail)).toBeTruthy();

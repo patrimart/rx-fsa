@@ -26,8 +26,6 @@ npm i rx-fsa
 
 Compatible with `Angular 6` and `RxJS 6`.
 
-Also compatible with `Angular 5` and `RxJS 5` with `rxjs-compat`.
-
 # Usage
 
 ## Basic Empty and Syncronous Actions
