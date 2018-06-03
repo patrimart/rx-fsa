@@ -1,5 +1,4 @@
-import { Observable } from "rxjs/Observable";
-import { from } from "rxjs/observable/from";
+import { from, Observable } from "rxjs";
 import { catchError, concatMap, exhaustMap, filter, map, mergeMap, switchMap } from "rxjs/operators";
 
 import { Action, ActionCreator, Meta } from "../actions/interfaces";

@@ -1,7 +1,7 @@
 /**
  * Interface for metadata.
  */
-export type Meta = Readonly<object> &  { readonly [key: string]: any };
+export type Meta = Readonly<object> & { readonly [key: string]: any };
 
 /**
  * Interface for FSA Action.
