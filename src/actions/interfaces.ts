@@ -1,14 +1,12 @@
 /**
  * Interface for metadata.
  */
-export interface Meta {
-  readonly $$typeChain: ReadonlyArray<string>;
-}
+export type Meta = Readonly<object> & { readonly [key: string]: any };
 
 /**
  * Interface for FSA Action.
  */
-export interface Action<P, M extends Meta> {
+export interface Action<P, M extends Meta = Meta> {
   readonly type: string;
   readonly payload: P;
   readonly meta: M;
@@ -34,10 +32,10 @@ export interface Fail<P, E> {
 /**
  * Interface for creating syncrconous actions.
  */
-export interface ActionCreator<P, M extends object> {
-  <M2 extends object>(payload: P, meta?: M2): Action<P, M & M2 & Meta>;
+export interface ActionCreator<P, M extends Meta = Meta> {
+  <M2 extends Meta = Meta>(payload: P, meta?: M2): Action<P, M & M2>;
   readonly type: string;
-  readonly match: (action: Action<any, any>) => action is Action<P, M & Meta>;
+  readonly match: (action: Action<any, any>) => action is Action<P, M>;
 }
 
 // export interface EmptyActionCreator<M extends object> extends ActionCreator<void, M> {
@@ -47,7 +45,7 @@ export interface ActionCreator<P, M extends object> {
 /**
  * Interface for creating async actions.
  */
-export interface AsyncActionCreators<P, S, E, M extends object> {
+export interface AsyncActionCreators<P, S, E, M extends Meta = Meta> {
   readonly type: string;
   readonly started: ActionCreator<P, M>;
   readonly done: ActionCreator<Done<P, S>, M>;
@@ -58,6 +56,6 @@ export interface AsyncActionCreators<P, S, E, M extends object> {
  * Interface for the action creator factory.
  */
 export interface ActionCreatorFactory {
-  <P = void, M extends object = Meta>(type: string, commonMeta?: M, error?: boolean): ActionCreator<P, M>;
-  readonly async: <P, S, E, M extends object = Meta>(type: string, commonMeta?: M) => AsyncActionCreators<P, S, E, M>;
+  <P = void, M extends Meta = Meta>(type: string, commonMeta?: M, error?: boolean): ActionCreator<P, M>;
+  readonly async: <P, S, E, M extends Meta = Meta>(type: string, commonMeta?: M) => AsyncActionCreators<P, S, E, M>;
 }

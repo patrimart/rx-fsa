@@ -8,7 +8,9 @@ This TypeScript library provides:
 - `@ngrx/store` lazy MemoizedSelector
 
 ```ts
-export interface Action<P, M extends Meta> {
+export type Meta = Readonly<object> & { readonly [key: string]: any };
+
+export interface Action<P, M extends Meta = Meta> {
   readonly type: string;
   readonly payload: P;
   readonly meta: M;
@@ -19,8 +21,10 @@ export interface Action<P, M extends Meta> {
 # Installation
 
 ```
-npm i -S rx-fsa
+npm i rx-fsa
 ```
+
+`/ngrx` and `/rxjs` libs are compatible with `Angular 6` and `RxJS 6`.
 
 # Usage
 
@@ -43,7 +47,11 @@ const decrementAction = (count: number) => decrementCounterFactory(count);
 ## Async Action Creators
 
 ```ts
-const saveCountFactory = counterActionFactory.async<{ count: 100 }, void, Error>("SAVE");
+interface State {
+  readonly count?: number;
+}
+
+const saveCountFactory = counterActionFactory.async<State, void, Error>("SAVE");
 const saveCountStartedAction = saveCountFactory.started({ count: 100 });
 const saveCountDoneAction = saveCountFactory.done({ result: 100, params: { count: 100 } });
 const saveCountFailedAction = saveCountFactory.failed({ error: new Error("File not saved."), params: { count: 100 } });
@@ -56,19 +64,16 @@ const saveCountFailedAction = saveCountFactory.failed({ error: new Error("File n
 ```ts
 import { caseFn, Re, reducerDefaultFn } from "rx-fsa/reducers";
 
-interface State {
-  value: number;
-}
-const INIT_STATE: State = { value: 0 };
+const INIT_STATE: State = { count: 0 };
 
 const resetHandler: Re<State, void> = state => INIT_STATE;
 
 const incrementHandler: Re<State, number> = (state, add) => ({
-  value: state.value + add,
+  count: state.count + add,
 });
 
 const decrementHandler: Re<State, number> = (state, sub) => ({
-  value: state.value - sub,
+  count: state.count - sub,
 });
 
 export const reducers = reducerDefaultFn(INIT_STATE)(
@@ -123,12 +128,13 @@ Create a `MemoizedSelector` that will emit a store slice or, if unavailable, dis
 ```ts
 // selectors.ts
 import { createSelector } from "@ngrx/store";
-import { lazySelectorFactory } from "rx-fsa/ngrx";
+import { composeLazySelector, createLazySelector } from "rx-fsa/ngrx";
 
-export const selectFeature = (state: AppState) => state.feature;
-export const selectFeatureCount = createSelector(selectFeature, state => state.counter);
+const selectFeature = (state: AppState) => state.feature;
+const selectFeatureCount = createSelector(selectFeature, state => state.counter);
 
-export const lazySelectFeatureCount = lazySelectorFactory(selectFeatureCount, loadFeatureAction);
+export const lazySelectFeatureCount = createLazySelector(selectFeatureCount, loadFeatureAction.started(undefined));
+export const lazySelectCountPlusN = composeLazySelector(lazySelectFeatureCount, lazySelectN)((count, n) => count + n);
 ```
 
 ```ts
@@ -137,18 +143,18 @@ import { lazySelectFeatureCount } from './selectors';
 
 @Component({ ... })
 class MyAppComponent {
-  counter: Observable<number>;
+  count: Observable<number>;
 
-  constructor(private store: Store<AppState>) {
-    const selectFeatureCount = lazySelectFeatureCount(store);
-    this.counter = store.pipe(select(selectFeatureCount()));
+  constructor(private store$: Store<AppState>) {
+    const selectFeatureCount = lazySelectFeatureCount(this.store$);
+    this.count = this.store$.pipe(selectFeatureCount());
   }
 }
 ```
 
 # API
 
-API Documentation is coming soon. The library is small to scour through in GitHub to learn more.
+API Documentation is coming soon. The library is small enough to scour through in GitHub to learn more.
 
 # Credits
 

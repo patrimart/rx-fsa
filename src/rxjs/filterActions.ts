@@ -1,4 +1,4 @@
-import { Observable } from "rxjs/Observable";
+import { Observable } from "rxjs";
 import { filter } from "rxjs/operators";
 
 import { Action, ActionCreator, Meta } from "../actions/interfaces";
