@@ -1,11 +1,11 @@
 import { Action, ActionCreator, Meta } from "../actions/interfaces";
 
-export type Reducer<S, P, M extends Meta> = (state: S, action: Action<P, M>) => S;
+export type Reducer<S, P, M extends Meta> = (state: S | undefined, action: Action<P, M>) => S | undefined;
 
 /**
  * Interface for action handler.
  */
-export type Handler<S, P> = (state: S, payload: P) => S;
+export type Handler<S, P> = (state: S | undefined, payload: P) => S;
 
 /**
  * Variadic interface for casesFn.
