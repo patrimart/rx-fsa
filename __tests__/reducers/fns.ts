@@ -25,7 +25,7 @@ test("Reducers", () => {
   const incReducer = reducerFn(caseFn(incrementAction, incrementHandler));
   const decReducer = reducerFn(caseFn(decrementAction, decrementHandler));
   const multiReducer = reducerFn(casesFn([increment10Action, increment20Action], incrementHandler));
-  const reducers = reducerDefaultFn(INIT_STATE)(incReducer, decReducer, multiReducer);
+  const reducers = reducerDefaultFn(INIT_STATE, incReducer, decReducer, multiReducer);
 
   const finalState = [
     incrementAction({ increment: 1 }),
