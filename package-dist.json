@@ -1,6 +1,6 @@
 {
   "name": "rx-fsa",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "author": "Patrick Martin",
   "license": "MIT",
   "description": "This TypeScript library provides factories for creating fully typed FSA-compliant Actions, reducers and RxJS utility operators.",

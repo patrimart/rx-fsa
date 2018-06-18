@@ -1,5 +1,5 @@
 import { from, Observable } from "rxjs";
-import { catchError, concatMap, exhaustMap, filter, map, mergeMap, switchMap } from "rxjs/operators";
+import { catchError, concatMap, exhaustMap, filter, first, map, mergeMap, switchMap } from "rxjs/operators";
 
 import { Action, ActionCreator, Meta } from "../actions/interfaces";
 import { ResponseFns } from "./interfaces";
@@ -9,11 +9,13 @@ const filterMapBase = (mapper: typeof mergeMap) => <P, R, E, M extends Meta>(
   project: (params: P) => Observable<R>,
   failureFn: ResponseFns<P, E, M> = () => [],
   successFn: ResponseFns<P, R, M> = () => [],
-) => (obs: Observable<Action<any, any>>) => obs.pipe(
+) => (obs: Observable<Action<any, any>>) =>
+  obs.pipe(
     filter(action.match),
     map(({ payload: params, meta }) => ({ params, meta })),
     mapper(({ params, meta }) =>
       project(params).pipe(
+        first(),
         mergeMap((result: R) => from(successFn(params, result, meta))),
         catchError(error => from(failureFn(params, error, meta))),
       ),
