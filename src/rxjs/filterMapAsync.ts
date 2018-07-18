@@ -1,5 +1,5 @@
 import { from, Observable } from "rxjs";
-import { catchError, concatMap, exhaustMap, filter, first, map, mergeMap, switchMap } from "rxjs/operators";
+import { catchError, concatMap, exhaustMap, filter, map, mergeMap, switchMap } from "rxjs/operators";
 
 import { Action, AsyncActionCreators, Done, Fail, Meta } from "../actions/interfaces";
 import { ResponseFns } from "./interfaces";
@@ -15,7 +15,6 @@ const filterMapAsyncBase = (mapper: typeof mergeMap) => <P, R, E, M extends Meta
     map(({ payload: params, meta }) => ({ params, meta })),
     mapper(({ params, meta }) =>
       project(params).pipe(
-        first(),
         mergeMap((result: R) =>
           from(
             [action.done({ params, result }, meta) as Action<Done<P, R>, M & {}>].concat(
