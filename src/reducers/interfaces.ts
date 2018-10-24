@@ -46,6 +46,7 @@ export interface CasesFn {
     ],
     handler: Handler<S, P1 | P2 | P3 | P4 | P5 | P6>,
   ): Reducer<S, P1 | P2 | P3 | P4 | P5 | P6, any>;
+  <S>(actionCreator: [ActionCreator<any, any>], handler: Handler<S, any>): Reducer<S, any, any>;
 }
 
 /**
